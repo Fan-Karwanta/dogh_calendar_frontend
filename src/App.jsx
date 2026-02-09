@@ -8,6 +8,7 @@ const socket = io(API_URL)
 
 function App() {
   const [events, setEvents] = useState([])
+  const [holidays, setHolidays] = useState([])
   const [currentDate, setCurrentDate] = useState(new Date())
   const [selectedDate, setSelectedDate] = useState(null)
 
@@ -21,34 +22,77 @@ function App() {
     }
   }
 
+  const fetchHolidays = async (year, month) => {
+    try {
+      const res = await fetch(`${API_URL}/api/holidays/month/${year}/${month}`)
+      const data = await res.json()
+      setHolidays(data)
+    } catch (error) {
+      console.error('Error fetching holidays:', error)
+    }
+  }
+
   useEffect(() => {
     const year = currentDate.getFullYear()
     const month = currentDate.getMonth() + 1
     fetchEvents(year, month)
+    fetchHolidays(year, month)
   }, [currentDate])
 
   useEffect(() => {
-    socket.on('eventCreated', (event) => {
-      const eventDate = new Date(event.date)
-      const currentMonth = currentDate.getMonth()
-      const currentYear = currentDate.getFullYear()
-      if (eventDate.getMonth() === currentMonth && eventDate.getFullYear() === currentYear) {
-        setEvents(prev => [...prev, event])
-      }
+    socket.on('eventCreated', () => {
+      const year = currentDate.getFullYear()
+      const month = currentDate.getMonth() + 1
+      fetchEvents(year, month)
     })
 
-    socket.on('eventUpdated', (updatedEvent) => {
-      setEvents(prev => prev.map(e => e._id === updatedEvent._id ? updatedEvent : e))
+    socket.on('eventUpdated', () => {
+      const year = currentDate.getFullYear()
+      const month = currentDate.getMonth() + 1
+      fetchEvents(year, month)
     })
 
     socket.on('eventDeleted', (deletedEvent) => {
       setEvents(prev => prev.filter(e => e._id !== deletedEvent._id))
     })
 
+    socket.on('holidayCreated', () => {
+      const year = currentDate.getFullYear()
+      const month = currentDate.getMonth() + 1
+      fetchHolidays(year, month)
+    })
+
+    socket.on('holidayUpdated', () => {
+      const year = currentDate.getFullYear()
+      const month = currentDate.getMonth() + 1
+      fetchHolidays(year, month)
+    })
+
+    socket.on('holidayDeleted', () => {
+      const year = currentDate.getFullYear()
+      const month = currentDate.getMonth() + 1
+      fetchHolidays(year, month)
+    })
+
+    socket.on('holidaysSeeded', () => {
+      const year = currentDate.getFullYear()
+      const month = currentDate.getMonth() + 1
+      fetchHolidays(year, month)
+    })
+
+    socket.on('holidaysCleared', () => {
+      setHolidays([])
+    })
+
     return () => {
       socket.off('eventCreated')
       socket.off('eventUpdated')
       socket.off('eventDeleted')
+      socket.off('holidayCreated')
+      socket.off('holidayUpdated')
+      socket.off('holidayDeleted')
+      socket.off('holidaysSeeded')
+      socket.off('holidaysCleared')
     }
   }, [currentDate])
 
@@ -68,38 +112,23 @@ function App() {
   }
 
   return (
-    <div className="min-h-screen relative">
-      {/* Background Image */}
-      <div
-        className="fixed inset-0 z-0"
-        style={{
-          backgroundImage: 'url(/assets/dogh_background.jpg)',
-          backgroundSize: 'cover',
-          backgroundPosition: 'center',
-          backgroundRepeat: 'no-repeat',
-        }}
-      >
-        <div className="absolute inset-0 bg-gradient-to-br from-dogh-dark/85 via-dogh-secondary/80 to-dogh-primary/75 backdrop-blur-sm" />
-      </div>
-
-      {/* Content */}
-      <div className="relative z-10 min-h-screen flex flex-col">
-        <Header />
-        <main className="flex-1 container mx-auto px-4 py-6 max-w-7xl">
-          <Calendar
-            currentDate={currentDate}
-            events={events}
-            selectedDate={selectedDate}
-            onSelectDate={setSelectedDate}
-            onPrevMonth={goToPrevMonth}
-            onNextMonth={goToNextMonth}
-            onToday={goToToday}
-          />
-        </main>
-        <footer className="text-center py-4 text-cyan-200/60 text-sm">
-          © {new Date().getFullYear()} Davao Occidental General Hospital. All rights reserved.
-        </footer>
-      </div>
+    <div className="min-h-screen bg-gray-100">
+      <Header />
+      <main className="container mx-auto px-4 py-6 max-w-[1400px]">
+        <Calendar
+          currentDate={currentDate}
+          events={events}
+          holidays={holidays}
+          selectedDate={selectedDate}
+          onSelectDate={setSelectedDate}
+          onPrevMonth={goToPrevMonth}
+          onNextMonth={goToNextMonth}
+          onToday={goToToday}
+        />
+      </main>
+      <footer className="text-center py-4 text-gray-400 text-sm">
+        © {new Date().getFullYear()} Davao Occidental General Hospital. All rights reserved.
+      </footer>
     </div>
   )
 }

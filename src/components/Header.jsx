@@ -3,19 +3,19 @@ import { ExternalLink } from 'lucide-react'
 
 function Header() {
   return (
-    <header className="bg-white/10 backdrop-blur-md border-b border-white/10">
-      <div className="container mx-auto px-4 py-4 max-w-7xl flex items-center justify-between">
+    <header className="bg-white border-b border-gray-200 shadow-sm">
+      <div className="container mx-auto px-4 py-4 max-w-[1400px] flex items-center justify-between">
         <div className="flex items-center gap-4">
           <img
             src="/assets/dogh_logo.png"
             alt="DOGH Logo"
-            className="w-14 h-14 object-contain rounded-full bg-white/90 p-1 shadow-lg"
+            className="w-14 h-14 object-contain rounded-full bg-white p-1 shadow-md border border-gray-200"
           />
           <div>
-            <h1 className="text-2xl font-bold text-white tracking-tight">
+            <h1 className="text-2xl font-bold text-gray-900 tracking-tight">
               Davao Occidental General Hospital
             </h1>
-            <p className="text-cyan-200/80 text-sm font-medium tracking-wide">
+            <p className="text-gray-500 text-sm font-medium tracking-wide">
               Calendar of Events
             </p>
           </div>
@@ -24,7 +24,7 @@ function Header() {
           href="https://dogh-room.vercel.app"
           target="_blank"
           rel="noopener noreferrer"
-          className="flex items-center gap-2 px-5 py-2.5 bg-white/15 hover:bg-white/25 text-white font-medium rounded-xl transition-all border border-white/20 backdrop-blur-sm shadow-lg"
+          className="flex items-center gap-2 px-5 py-2.5 bg-dogh-primary hover:bg-dogh-secondary text-white font-medium rounded-xl transition-all shadow-md"
         >
           <ExternalLink className="w-4 h-4" />
           <span className="hidden sm:inline">Book Appointment</span>
