@@ -112,7 +112,7 @@ function App() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-100">
+    <div className="min-h-screen bg-gradient-to-br from-slate-100 via-gray-50 to-cyan-50/30">
       <Header />
       <main className="container mx-auto px-4 py-6 max-w-[1400px]">
         <Calendar
@@ -126,8 +126,8 @@ function App() {
           onToday={goToToday}
         />
       </main>
-      <footer className="text-center py-4 text-gray-400 text-sm">
-        © {new Date().getFullYear()} Davao Occidental General Hospital. All rights reserved.
+      <footer className="text-center py-6 text-gray-300 text-xs tracking-wide">
+        <p>&copy; {new Date().getFullYear()} Davao Occidental General Hospital. All rights reserved.</p>
       </footer>
     </div>
   )
